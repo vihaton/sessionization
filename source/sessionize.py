@@ -2,18 +2,17 @@ import sys
 import json
 __author__ = "Vili Hätönen"
 
+#TODO event types as enums
+#TODO stream start and end
+#TODO pause and play
+#TODO track playtime
+#TODO ad count
+#TODO separate to different files
+
 #closedsessions = {} #to move data from the open ones, prevents extra work
 opensessions = {}
 lts = -1 # the Latest TimeStamp for checking timeouts
 
-"""
-{
-  "timestamp": 123,
-  "event_type": "track_heartbeat",
-  "user_id": "A",
-  "content_id": "T1001"
-}
-"""
 class Sessio(object):
 
     def __init__(self, event):
@@ -84,6 +83,6 @@ def main():
     print("open sessions in the end:")
     for s in opensessions.values():
         s.print_this()
-        
+
 if __name__ == "__main__":
     main()
