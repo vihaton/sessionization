@@ -1,2 +1,2 @@
 # sessionization
-Gather sessions from events
+Compile sessions from events.
