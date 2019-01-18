@@ -1,5 +1,6 @@
 import sys
 import json
+__author__ = "Vili Hätönen"
 
 #closedsessions = {} #to move data from the open ones, prevents extra work
 opensessions = {}
@@ -12,26 +13,24 @@ opensessions = {}
 }
 """
 class Sessio(object):
-    sc = ""
 
     def __init__(self, event):
-        global sc
-        sc = {} # session content
-        sc["user_id"] = event["user_id"]
-        sc["content_id"] = event["content_id"]
-        sc["session_start"] = event["timestamp"]
-        sc["session_end"] = -1
-        sc["total_time"] = 0
-        sc["track_playtime"] = 0
-        sc["event_count"] = 0
-        sc["ad_count"] = 0
+        self.sc = {} # session content
+        self.sc["user_id"] = event["user_id"]
+        self.sc["content_id"] = event["content_id"]
+        self.sc["session_start"] = event["timestamp"]
+        self.sc["session_end"] = -1
+        self.sc["total_time"] = 0
+        self.sc["track_playtime"] = 0
+        self.sc["event_count"] = 1
+        self.sc["ad_count"] = 0
 
     def print_this(self):
-        print(sc)
+        print(self.sc)
 
     def add_event(self, event):
         #TODO add all other status updates
-        sc["event_count"] += 1
+        self.sc["event_count"] += 1
 
 def process_event(event):
     #TODO if event is about starting a session then the previous session is closed
@@ -41,6 +40,7 @@ def process_event(event):
         #update the session
         s = opensessions[event["user_id"]]
         s.add_event(event)
+        opensessions[event["user_id"]] = s
 
     else:   #create new session
         opensessions[event["user_id"]] = Sessio(event) # assumes that one user can have one session open
@@ -50,16 +50,15 @@ def parse_input(line):
         #TODO check for valid structure of input
         return json.loads(line)
     except:
-        print("The input was invalid")
+        print("The input was invalid:\n\t", line)
 
 def main():
     for line in sys.stdin:
         event = parse_input(line)
         process_event(event)
-        print("***\n")
+        print("\n***")
         for s in opensessions.values():
             s.print_this()
 
-
-if __name__ is "__main__":
+if __name__ == "__main__":
     main()
