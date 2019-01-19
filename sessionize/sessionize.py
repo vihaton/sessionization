@@ -47,7 +47,7 @@ def process_event(event):
             # we continue an existing session
             s.add_event(event)
         
-    else:   # no existing session, create a new one
+    else:   # no existing session, create a new one (even the start stream would have lost on the way, BONUS)
         opensessions[uid] = Sessio(event)
 
 def parse_input(line):
