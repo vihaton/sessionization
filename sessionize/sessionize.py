@@ -58,8 +58,9 @@ def parse_input(line):
         print("The input was invalid:\n\t", line)
 
 def main():
+    #TODO add functionality for files as command line arguments
 
-    #with open ("data/test_data.json", "r") as f:
+    #with open ("data/events.json", "r") as f:
     #    data = f.readlines()
 
     #for line in data:
@@ -68,9 +69,9 @@ def main():
         process_event(event)
         end_sessions()
 
-    print("open sessions in the end:")
-    for s in opensessions.values():
-        s.print_this()
+    #print("open sessions in the end:")
+    #for s in opensessions.values():
+    #    s.print_this()
 
 if __name__ == "__main__":
     main()
