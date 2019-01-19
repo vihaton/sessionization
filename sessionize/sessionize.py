@@ -3,15 +3,8 @@ __author__ = "Vili Hätönen"
 import sys
 import json
 
-from sessionize.sessio import Sessio
-from sessionize.event_types import EventType
+from sessio import Sessio
 
-#TODO stream start and end
-#TODO pause and play
-#TODO track playtime
-#TODO ad count
-
-#closedsessions = {} #to move data from the open ones, prevents extra work
 opensessions = {}
 lts = -1 # the Latest TimeStamp for checking timeouts
 
@@ -29,6 +22,7 @@ def end_sessions():
     for k in opensessions.keys():
         s = opensessions[k]
         if lts >= 60 + int(s.sc["session_end"]):    #if the latest event on this session was over a minute ago
+            s.state = "closed (timeout)"
             topop.append(k)
         elif s.state == "closed":                   #stream was closed
             topop.append(k)
@@ -40,15 +34,13 @@ def process_event(event):
     lts = event["timestamp"]
     uid = event["user_id"]
 
-    #TODO if event is about starting a session then the previous session is closed
-
     # Has this user already a session open?
-    # (this assumes that one user can have one session open)
+    # (this assumes that one user can have max one session open)
     if event["user_id"] in opensessions.keys():
         s = opensessions[uid]
 
         # if this is start stream then close the old session and start new
-        if event["event_type"] == EventType.stream_start:
+        if event["event_type"] == "stream_start":
             output_sessions([uid])
             opensessions[uid] = Sessio(event) 
         else:
@@ -66,6 +58,11 @@ def parse_input(line):
         print("The input was invalid:\n\t", line)
 
 def main():
+
+    #with open ("data/test_data.json", "r") as f:
+    #    data = f.readlines()
+
+    #for line in data:
     for line in sys.stdin:
         event = parse_input(line)
         process_event(event)

@@ -1,6 +1,6 @@
 __author__ = "Vili Hätönen"
 
-from . import EventType
+import json
 
 class Sessio(object):
 
@@ -19,7 +19,8 @@ class Sessio(object):
         self.sc["ad_count"] = 0
 
     def print_this(self):
-        print(self.sc)
+        print(json.dumps(self.sc))
+        #print("\tstate: ", self.state, "\tpaused: ", self.paused)
 
     def add_event(self, event):
         self.sc["event_count"] += 1
@@ -29,34 +30,34 @@ class Sessio(object):
 
         if et == "ad_start":
             self.state = "open/ad"
-            self.sc["ad_count"] = 1
+            self.sc["ad_count"] += 1
 
-        elif et == EventType.ad_end:
+        elif et == "ad_end":
             self.state = "open"
 
-        elif et == EventType.track_start:
+        elif et == "track_start":
             self.state = "open/playing"
 
-        elif et == EventType.pause:
+        elif et == "pause":
             self.state = "open/paused"
             
-        elif et == EventType.play:
+        elif et == "play":
             self.state = "open/playing"
             # the time paused is current time - latest event time + previous pauses, bc "play must happen after pause event"
             self.paused += ts - prev_ts
             
-        elif et == EventType.track_heartbeat:
+        elif et == "track_heartbeat" or et == "track_hearbeat":
             self.sc["track_playtime"] += ts - prev_ts
 
-        elif et == EventType.track_end:
+        elif et == "track_end":
             self.state = "open/end"
             self.sc["track_playtime"] += ts - prev_ts
 
-        elif et == EventType.stream_end:
+        elif et == "stream_end":
             self.state = "closed"
 
         self.sc["session_end"] = ts #stores the stamp of latest event
 
          # this is the way total time is approximated in the instructions, 
          # ie. exclude the 60s wait for timeout
-        self.sc["total_time"] = ts - self.sc["session_start"] - self.paused
+        self.sc["total_time"] = ts - self.sc["session_start"]

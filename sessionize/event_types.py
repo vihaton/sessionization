@@ -1,5 +1,7 @@
 __author__ = "Vili Hätönen"
 
+### DEPRECATED ### 
+
 import enum
 
 #Does this bring any benefits? Maybe protects from typos... worth it?
