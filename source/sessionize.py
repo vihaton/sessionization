@@ -1,42 +1,19 @@
-import sys
-import json
 __author__ = "Vili Hätönen"
 
-#TODO event types as enums
+import sys
+import json
+
+from sessio import *
+from event_types import *
+
 #TODO stream start and end
 #TODO pause and play
 #TODO track playtime
 #TODO ad count
-#TODO separate to different files
 
 #closedsessions = {} #to move data from the open ones, prevents extra work
 opensessions = {}
 lts = -1 # the Latest TimeStamp for checking timeouts
-
-class Sessio(object):
-
-    def __init__(self, event):
-        self.sc = {} # session content
-        self.sc["user_id"] = event["user_id"]
-        self.sc["content_id"] = event["content_id"]
-        ts = event["timestamp"]
-        self.sc["session_start"] = ts
-        self.sc["session_end"] = ts
-        self.sc["total_time"] = 0
-        self.sc["track_playtime"] = 0
-        self.sc["event_count"] = 1
-        self.sc["ad_count"] = 0
-
-    def print_this(self):
-        print(self.sc)
-
-    def add_event(self, event):
-        self.sc["event_count"] += 1
-        ts = event["timestamp"]
-        self.sc["session_end"] = ts
-        self.sc["total_time"] = ts - self.sc["session_start"] # this is the way total time is approximated in the instructions, ie. exclude the 60s wait for timeout
-
-        #TODO add all other status updates
 
 def check_timeouts():
     global lts
@@ -49,7 +26,7 @@ def check_timeouts():
 
     # close the timed out sessions
     for k in topop:
-        print(opensessions.pop(k).print_this())
+        opensessions.pop(k).print_this()
 
 def process_event(event):
     global lts
