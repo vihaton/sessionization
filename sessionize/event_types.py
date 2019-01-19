@@ -2,6 +2,7 @@ __author__ = "Vili Hätönen"
 
 import enum
 
+#Does this bring any benefits? Maybe protects from typos... worth it?
 class EventType(enum.Enum):
     stream_start = "stream_start"
     ad_start = "ad_start"
@@ -12,3 +13,4 @@ class EventType(enum.Enum):
     play = "play"
     track_end = "track_end"
     stream_end = "stream_end"	
+
